@@ -1,0 +1,41 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * *
+ * Several default colors to be used in the style sheet.
+ * I prefer red base color, so colors are tinted slightly.
+>* * * * * * * * * * * * * * * * * * * * * * * * */
+.ornbcreatorcolors{
+    --ornb-bright-white: rgb(180, 160, 160);
+    --ornb-light-white: rgb(160, 140, 140);
+    --ornb-dark: rgb(55, 45, 45);
+}
+
+* {
+    --ornb-toolbar-shadow-dimensions: 0px 2px 10px;
+}
+
+.colormodedark{
+    --ornb-primary-font-color:var(--ornb-light-white);
+    --ornb-primary-background-color:var(--ornb-dark);
+    --ornb-primary-border-color: var(--ornb-dark);
+    --ornb-shadow_color: rgba(0, 0, 0, 0.4);
+}
+.colormodelight{
+    --ornb-primary-font-color:--ornb-dark;
+    --ornb-primary-background-color:-ornb-bright-white;
+    --ornb-primary-border-color: --ornb-light-white;
+    --ornb-shadow_color: rgba(160, 140, 140, 0.4);
+}
+.toolbar{
+    height: 25px;
+    border: none;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    margin-bottom: 0px;
+    margin-left: 0px;
+    z-index: 2147483647;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: var(--ornb-toolbar-shadow-dimensions), var(--ornb-shadow_color);
+}
+
+hr{margin:0;border:0px;height:1px;background:var(--ornb-primary-border-color)}

@@ -1,0 +1,43 @@
+{
+    "manifest_version": 3,
+    "name": "Online Reader",
+    "short_name": "Online Reader",
+    "version": "0.1.0",
+    "description": "A test and early implementation of the reader functionality from my online reader extension.",
+    "icons": {
+        "48": "images/icon-48.png",
+        "128": "images/icon-128.png"
+    },
+    "action": {
+        "default_title": "Open Reader Sidebar",
+        "default_popup": "reader.html"
+    },
+    "background": {
+        "service_worker": "service-worker.js"
+    },
+    "commands": {
+        "nextPage": {
+            "description": "Navigate to the page's 'next page' using webpage buttons. (TODO)"
+        },
+        "backPage": {
+            "description": "Navigate to the page's 'previous page' using webpage buttons. (TODO)"
+        },
+        "downloadPageContent": {
+            "description": "Download the contents of the page. (TODO)"
+        }
+    },
+    "permissions": [
+        "activeTab",
+        "clipboardWrite",
+        "commands",
+        "contextMenus",
+        "cookies",
+        "downloads",
+        "readingList",
+        "scripting",
+        "sidePanel",
+        "storage"
+    ],
+    "host_permissions": ["<all_urls>"]
+    
+}
