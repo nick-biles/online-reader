@@ -36,7 +36,7 @@ var reader = {
     backPage: backPage
 };
 
-function startScrolling(request) {
+function startScrolling(request: {speed: number, persist: boolean}) {
     // If speed requested is equivalent to current speed, exit.
     if (scrollSpeed == request.speed) { return true; }
 
@@ -91,5 +91,5 @@ async function onFullyLoaded() {
     if (myTabId != autoScrollingTabId["autoScrollTab"])
         return;
     let persistedScrollSpeed = await chrome.storage.session.get("lastSpeed");
-    quickScroll({speed: persistedScrollSpeed.lastSpeed});
+    startScrolling({speed: persistedScrollSpeed.lastSpeed, persist: false});
 }
