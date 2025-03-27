@@ -35,10 +35,10 @@ function onPopup() {
         addEventListen(element, event.action, event.func, event.parameter);
     }
     chrome.storage.session.get("lastSpeed")
-    .then((lastSpeed) => {
-        if (lastSpeed != null) {
-            console.log(lastSpeed.lastSpeed);
-            speedElement.setAttribute("value", lastSpeed.lastSpeed);
+    .then((data) => {
+        if (data.lastSpeed) {
+            console.log("Retrieved stored speed: " + data.lastSpeed);
+            speedElement.setAttribute("value", data.lastSpeed);
         }
     });
 }
