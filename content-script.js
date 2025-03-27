@@ -32,61 +32,48 @@ var scrollIntervalID;
 var scrollSpeed = 0;
 var reader = {
     startScrolling: startScrolling,
-    autoScroll: autoScroll,
-    stopScrolling: stopScrolling,
     nextPage: nextPage,
-    backPage: backPage,
-    changePersist: changePersist
+    backPage: backPage
 };
 
 function startScrolling(request) {
+    // If speed requested is equivalent to current speed, exit.
     if (scrollSpeed == request.speed) { return true; }
-    if (scrollIntervalID) { stopScrolling(); }
-    chrome.storage.session.set({lastSpeed: request.speed});
 
-    quickScroll(request);
+    // If already scrolling, stop autoscroller in order to replace it. 
+    if (scrollIntervalID) {
+        clearInterval(scrollIntervalID);
+        scrollIntervalID = null;
+    }
 
     scrollSpeed = request.speed;
-    return true;
-}
-function quickScroll(request) {
+
+    // If opted in, save requested speed and current tabId in storage.
+    if(request.persist) {
+        chrome.storage.session.set({ autoScrollTab: myTabId});
+        chrome.storage.session.set({lastSpeed: request.speed});
+    }
+    
+    // If requested speed is 0, exit before instantiating scroller.
+    if (request.speed == 0) { return true; }
+
+    // Calculate scroll parameters from speed variable.
     let time = 400/request.speed;
     let distance = 1;
+    // Start scrolling with setInterval.  Scrolls [distance] pixels downwards every [time] milliseconds.
     scrollIntervalID = setInterval(function scroll(distance) { window.scrollBy(0, distance); }, time, distance);
     console.log("content-script: Started Scrolling" + ` | ${distance}px every ${time}ms`);
-}
-function autoScroll(request) {
-    startScrolling(request);
-    
-    chrome.storage.session.set({ autoScrollTab: myTabId});
-    // let newRequest = { for: "background", request: "addPersistentRequest", toRequest: { request: "startScrolling", speed: scrollSpeed }}
-    // if (chrome.runtime?.id) {
-    //     return chrome.runtime.sendMessage(newRequest);
-    // }
-}
-function stopScrolling(request) {
-    if (!scrollIntervalID) { return; }
-    clearInterval(scrollIntervalID);
-    scrollIntervalID = null;
-    scrollSpeed = 0;
-    console.log("content-script: Stopped Scrolling");
 
-    chrome.storage.session.remove("autoScrollTab");
-    // return chrome.runtime.sendMessage({ for: "background", request: "removePersistentRequest" });
+    return true;
 }
+
+// Planned functions
 function nextPage(request) {
     console.log("content-script: Next (TODO)");
     return false;
 }
 function backPage(request) {
     console.log("content-script: Back (TODO)");
-}
-function changePersist(request) {
-    if (request.persist && scrollSpeed != 0) {
-        return {request: "startScrolling", speed: scrollSpeed, persist: true}
-    } else {
-        return {};
-    }
 }
 
 
