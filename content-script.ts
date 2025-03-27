@@ -14,6 +14,9 @@ chrome.runtime.onMessage.addListener(function recieveMessage(request, sender, se
         console.log(text);
     }
     switch (request.request) {
+        case "startScrolling":
+            sendResponse(startScrolling(request));
+            return;
         case "isReaderContentScriptHere?":
             sendResponse("Online Reader content-script is present.");
             return;
@@ -22,7 +25,7 @@ chrome.runtime.onMessage.addListener(function recieveMessage(request, sender, se
             sendResponse(false);
             return false;
         default:
-            sendResponse(reader[request.request](request));
+            sendResponse("Unimplemented case: " + request.request);
     }
 });
 
@@ -30,11 +33,6 @@ chrome.runtime.onMessage.addListener(function recieveMessage(request, sender, se
 // Navigate Section
 var scrollIntervalID;
 var scrollSpeed = 0;
-var reader = {
-    startScrolling: startScrolling,
-    nextPage: nextPage,
-    backPage: backPage
-};
 
 function startScrolling(request: {speed: number, persist: boolean}) {
     // If speed requested is equivalent to current speed, exit.
