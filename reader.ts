@@ -1,3 +1,5 @@
+// Define element that contains scroll speed
+let speedElement = document.getElementById("scrollspeed") as HTMLInputElement;
 
 
 function addEventListen(element: Element, action: string, request: String) {
@@ -26,9 +28,9 @@ function onPopup() {
     }
     chrome.storage.session.get("lastSpeed")
     .then((lastSpeed) => {
-        if (lastSpeed) {
+        if (lastSpeed != null) {
             console.log(lastSpeed.lastSpeed);
-            document.getElementById("scrollspeed").setAttribute("value", lastSpeed.lastSpeed);
+            speedElement.setAttribute("value", lastSpeed.lastSpeed);
         }
     });
 }
