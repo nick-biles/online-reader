@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "Online Reader",
     "short_name": "Online Reader",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "A test and early implementation of the reader functionality from my online reader extension.",
     "icons": {
         "48": "images/icon-48.png",
