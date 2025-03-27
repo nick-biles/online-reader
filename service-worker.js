@@ -83,7 +83,7 @@ function doInject(indent, tabId, tab, changeInfo) {
     }
 }
 
-const scriptList = ["content-script.ts"];
+const scriptList = ["content-script.js"];
 function injectScriptsTo(tabId) {
     return chrome.scripting.executeScript({
         target: { tabId: tabId },
@@ -119,7 +119,7 @@ function addContextMenus() {
 function registerContentScripts() {
     chrome.scripting.registerContentScripts([{
         id: "reader-content-script",
-        js: ["content-script.ts"],
+        js: ["content-script.js"],
         matches: ["https://web.archive.org/*"] // Add here webpages to automatically be registed when the extension or chrome is updated.
     }])
 }
