@@ -26,7 +26,7 @@ chrome.action.onClicked.addListener(function actionClicked(tab) {
 
 //var savedMessage = {test: "test"};  // discontinued due to errors when the service-worker was reloaded.
 chrome.runtime.onMessage.addListener(function handleMessage(request, sender, sendResponse) {
-    console.log("Recieved message" + (sender.tab ? ` from ${sender.tab?.id}.` : " from undefined."));
+    console.log("Recieved message" + (sender.tab ? ` from ${sender.tab?.id}.` : " from undefined tab."));
     switch(request.for) {
     case "readerContent":
         chrome.tabs.query({ active: true, lastFocusedWindow: true })
@@ -40,21 +40,10 @@ chrome.runtime.onMessage.addListener(function handleMessage(request, sender, sen
         case "downloadPage":
             chrome.downloads.download(request.options);
             break;
-        // case "addPersistentRequest":
-        //     savedMessage[sender.tab?.id] = request.toRequest;
-        //     console.log("Saving persisted request for sender " + sender.tab?.id + ".");
-        //     break;
-        // case "removePersistentRequest":
-        //     delete savedMessage[sender.tab?.id];
-        //     console.log("Deleted persisted data for sender " + sender.tab?.id + ".");
-        //     break;
         case "injectActiveTab":
             console.log("onMessage: doInject");
             sendResponse(doInject("  ", request.to.id, request.to));
             break;
-        // case "returnCurrentScroll":
-        //     if (sender.tab?.id && savedMessage[sender.tab?.id]) chrome.tabs.sendMessage(sender.tab.id, savedMessage[sender.tab.id]);
-        //     break;
         case "returnMyTabId":
             console.log("onMessage: returnMyTabId")
             sendResponse({tabId: sender.tab.id});
@@ -84,10 +73,6 @@ function doInject(indent, tabId, tab, changeInfo) {
         .then(() => {
             console.log(indent + `Injected script into ${tabId}`
                 + (tab ? ` with status ${tab.status}` + (changeInfo ? `, change: ${Object.entries(changeInfo)}.` : ".") : "."));
-            // if (savedMessage[tabId]) {
-            //     chrome.tabs.sendMessage(tabId, savedMessage[tabId]);
-            //     console.log(indent + "Following up injected script with persisted scroll.");
-            // }
         }, () => { console.log(indent + "Failure injecting scripts "); return false; });
     });
     function handleInjectFulfilled() {
