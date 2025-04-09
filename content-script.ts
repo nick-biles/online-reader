@@ -31,7 +31,7 @@ chrome.runtime.onMessage.addListener(function recieveMessage(request, sender, se
 
 // Functions and variables part of reader tool.
 // Navigate Section
-var scrollIntervalID;
+var scrollIntervalID = null as (number | null);
 var scrollSpeed = 0;
 
 function startScrolling(request: {speed: number, persist: boolean}) {
@@ -59,18 +59,18 @@ function startScrolling(request: {speed: number, persist: boolean}) {
     let time = 400/request.speed;
     let distance = 1;
     // Start scrolling with setInterval.  Scrolls [distance] pixels downwards every [time] milliseconds.
-    scrollIntervalID = setInterval(function scroll(distance) { window.scrollBy(0, distance); }, time, distance);
+    scrollIntervalID = setInterval(function scroll(distance: number) { window.scrollBy(0, distance); }, time, distance);
     console.log("content-script: Started Scrolling" + ` | ${distance}px every ${time}ms`);
 
     return true;
 }
 
 // Planned functions
-function nextPage(request) {
+function nextPage(request: any) {
     console.log("content-script: Next (TODO)");
     return false;
 }
-function backPage(request) {
+function backPage(request: any) {
     console.log("content-script: Back (TODO)");
 }
 
