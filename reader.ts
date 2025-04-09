@@ -15,6 +15,7 @@ function addEventListen(element: Element, action: string, request: String, param
             let persist = parameters[1];
             chrome.tabs.sendMessage(activeTab.id, { request: request, speed: speed, persist: persist})
             .then(() => {}, (err) => {
+                // TODO: add proper error handling.  Currently we just assume there is no content script.
                 chrome.runtime.sendMessage({ for: "background", request: "injectActiveTab", to: activeTab});
                 setTimeout(chrome.tabs.sendMessage, 1000, activeTab.id, { request: request, speed: speed});
             });
