@@ -28,13 +28,8 @@ chrome.action.onClicked.addListener(function actionClicked(tab) {
 chrome.runtime.onMessage.addListener(function handleMessage(request, sender, sendResponse) {
     console.log("Recieved message" + (sender.tab ? ` from ${sender.tab?.id}.` : " from undefined tab."));
     switch(request.for) {
-    case "readerContent":
-        chrome.tabs.query({ active: true, lastFocusedWindow: true })
-        .then(([tab]) => {
-            chrome.tabs.sendMessage(tab.id, request);
-        });
-        console.log("Forwarded request to active tab's content script.")
-        break;
+    
+    // Handle messages targetted at the background service worker.
     case "background":
         switch(request.request) {
         case "downloadPage":
@@ -75,11 +70,6 @@ function doInject(indent, tabId, tab, changeInfo) {
                 + (tab ? ` with status ${tab.status}` + (changeInfo ? `, change: ${Object.entries(changeInfo)}.` : ".") : "."));
         }, () => { console.log(indent + "Failure injecting scripts "); return false; });
     });
-    function handleInjectFulfilled() {
-        return true;
-    }
-    function hadleInjectRejection() {
-        return false;
     }
 }
 
