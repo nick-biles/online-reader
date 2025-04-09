@@ -7,24 +7,23 @@ chrome.runtime.onInstalled.addListener(function installed() {
     chrome.storage.session.setAccessLevel({accessLevel: "TRUSTED_AND_UNTRUSTED_CONTEXTS"});
 });
 
-var actionEvent = "popup";
+// Popup scrolling menu when extension icon (action) is clicked.
+// var actionEvent = "popup"; // TODO: Intended for future support for different menu types.
 chrome.action.onClicked.addListener(function actionClicked(tab) {
     console.log("Action Clicked: doInject");
     doInject("  ", tab.id, tab);
-    switch(actionEvent) {
-    case "readerToolbar":
-        chrome.tabs.sendMessage(tab.id, { request: "trchecktoolbar" });
-        break;
-    case "readerSidebar":
-        chrome.sidePanel.setOptions({ path: readerPanel });
-        chrome.sidePanel.open({ tabId: tab.id });
-        break;
-    default:
-    }
-        
+    // switch(actionEvent) { TODO: Intended for future support for different menu types.
+    // case "readerToolbar":
+    //     chrome.tabs.sendMessage(tab.id, { request: "trchecktoolbar" });
+    //     break;
+    // case "readerSidebar":
+    //     chrome.sidePanel.setOptions({ path: readerPanel });
+    //     chrome.sidePanel.open({ tabId: tab.id });
+    //     break;
+    // default:
+    // }
 })
 
-//var savedMessage = {test: "test"};  // discontinued due to errors when the service-worker was reloaded.
 chrome.runtime.onMessage.addListener(function handleMessage(request, sender, sendResponse) {
     console.log("Recieved message" + (sender.tab ? ` from ${sender.tab?.id}.` : " from undefined tab."));
     switch(request.for) {
@@ -32,9 +31,9 @@ chrome.runtime.onMessage.addListener(function handleMessage(request, sender, sen
     // Handle messages targetted at the background service worker.
     case "background":
         switch(request.request) {
-        case "downloadPage":
-            chrome.downloads.download(request.options);
-            break;
+        // case "downloadPage": // TODO: Feature on the roadmap.
+        //     chrome.downloads.download(request.options);
+        //     break;
         case "injectActiveTab":
             console.log("onMessage: doInject");
             sendResponse(doInject("  ", request.to.id, request.to));
@@ -82,9 +81,11 @@ function injectScriptsTo(tabId) {
     });
 };
 
-chrome.commands.onCommand.addListener(function handleKeyboardShortcut(command, tab) {
-    console.log(command + " " + (tab) ? "executed in tab #" + tab.id + "." : "executed outside of a webpage.");
-});
+// Unused so far.
+// Handles keyboard shortcuts.
+// chrome.commands.onCommand.addListener(function handleKeyboardShortcut(command, tab) {
+//     console.log(command + " " + (tab) ? "executed in tab #" + tab.id + "." : "executed outside of a webpage.");
+// });
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
     switch(info.menuItemId) {
