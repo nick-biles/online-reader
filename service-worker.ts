@@ -24,11 +24,14 @@ chrome.runtime.onMessage.addListener(function handleMessage(request, sender, sen
         //     break;
         case "injectActiveTab":  // inject the reader content script into the currently active tab.
             console.log("onMessage: doInject");
-            sendResponse(doInject("  ", request.to.id, request.to));
+            sendResponse(doInject("  ", request.to.id, request.to, null));
             break;
         case "returnMyTabId":  // Gives a content script its tabID since it doesn't have it itself.
             console.log("onMessage: returnMyTabId")
-            sendResponse({tabId: sender.tab.id});
+            if (sender.tab)
+                sendResponse({tabId: sender.tab.id});
+            else
+                sendResponse();
             break;
         default:  // Handle an invalid request
             console.log("Invalid onMessage request, for background with request: " + request.request)
@@ -44,19 +47,19 @@ chrome.runtime.onMessage.addListener(function handleMessage(request, sender, sen
 })
 
 // Injects the content script into the given tab if it is not already injected.
-function doInject(indent, tabId, tab, changeInfo) {
+function doInject(indent: String, tabId: number, tab: chrome.tabs.Tab, changeInfo: any) {
     chrome.tabs.sendMessage(tabId, { request: "isReaderContentScriptHere?" })
     .then(handleInjectUnneeded, handleInject);
 
     // If the content script responds we don't need to inject it.
-    function handleInjectUnneeded(response) {
+    function handleInjectUnneeded(response: any) {
         console.log(indent + `Got response from ${tabId}: ${response}`
             + (tab ? ` Status of ${tab.status}` + (changeInfo ? `, change: ${Object.entries(changeInfo)}.` : ".") : ""));
         return true;
     }
 
     // If there is no content script injected, then inject it.
-    function handleInject(reason) {
+    function handleInject(reason: any) {
         injectScriptsTo(tabId)
         .then(() => { // Successful injection
             console.log(indent + `Injected script into ${tabId}`
@@ -71,7 +74,7 @@ function doInject(indent, tabId, tab, changeInfo) {
 
 // Handle injections programatically.  Used when the tab isn't registered.
 const scriptList = ["content-script.js"];
-function injectScriptsTo(tabId) {
+function injectScriptsTo(tabId: number) {
     return chrome.scripting.executeScript({
         target: { tabId: tabId },
         files: scriptList,
@@ -89,10 +92,14 @@ function injectScriptsTo(tabId) {
 chrome.contextMenus.onClicked.addListener((info, tab) => {
     switch(info.menuItemId) {
         case "actionMenuAddDynamicPage":  // Register the current tab's URL with the reader content script.
-            addPageToRegisteredScripts(tab.url, "reader-content-script");
+            if (tab && tab.url) {
+                addPageToRegisteredScripts(tab.url, "reader-content-script");
+            } else {
+                console.log("Failure registering script, no tab info.");
+            }
             break;
-        case "":
-            break;
+        // case "":
+        //     break;
         default:
 
     }
@@ -119,16 +126,19 @@ function registerContentScripts() {
 }
 
 // Function to register a website with the reader content script.
-function addPageToRegisteredScripts(URL, id) {
+function addPageToRegisteredScripts(URL: string, id: string) {
     // Trims a URL down to eliminate the path. 
     let temp = URL.indexOf(".");
-    indexAfterHost = URL.substring(temp).indexOf("/") + temp;
+    let indexAfterHost = URL.substring(temp).indexOf("/") + temp;
     let trimURL = URL.substring(0, indexAfterHost) + "/*";
 
     // Registers the trimmed URL
     chrome.scripting.getRegisteredContentScripts({ids: [id]})
         .then((contentScript) => {
-            let newMatches = contentScript[0].matches.concat(trimURL);
+            let oldMatches = contentScript[0].matches;
+            if (oldMatches === undefined)
+                return true;
+            let newMatches = oldMatches.concat(trimURL);
             chrome.scripting.updateContentScripts([{ id: id, matches: newMatches, persistAcrossSessions: true }]);
             console.log(`Added ${trimURL} to registered content script.`)
         });
