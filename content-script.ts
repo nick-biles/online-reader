@@ -1,6 +1,6 @@
 console.log("content-script: I am running!");
 
-var debug = true;
+var debug = false;
 var storageKey = "orContentScript";
 var myTabId = -1;
 
