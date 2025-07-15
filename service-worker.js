@@ -11,23 +11,6 @@ chrome.runtime.onInstalled.addListener(function installed() {
     chrome.storage.session.setAccessLevel({accessLevel: "TRUSTED_AND_UNTRUSTED_CONTEXTS"});
 });
 
-// Popup scrolling menu when extension icon (action) is clicked.
-// var actionEvent = "popup"; // TODO: Intended for future support for different menu types.
-chrome.action.onClicked.addListener(function actionClicked(tab) {
-    console.log("Action Clicked: doInject");
-    doInject("  ", tab.id, tab);
-    // switch(actionEvent) { TODO: Intended for future support for different menu types.
-    // case "readerToolbar":
-    //     chrome.tabs.sendMessage(tab.id, { request: "trchecktoolbar" });
-    //     break;
-    // case "readerSidebar":
-    //     chrome.sidePanel.setOptions({ path: readerPanel });
-    //     chrome.sidePanel.open({ tabId: tab.id });
-    //     break;
-    // default:
-    // }
-})
-
 chrome.runtime.onMessage.addListener(function handleMessage(request, sender, sendResponse) {
     console.log("Recieved message" + (sender.tab ? ` from ${sender.tab?.id}.` : " from undefined tab."));
     // Determine the target for the message.  Unused since I started sending messages direct.
