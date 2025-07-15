@@ -146,7 +146,7 @@ function addPageToRegisteredScripts(URL, id) {
     chrome.scripting.getRegisteredContentScripts({ids: [id]})
         .then((contentScript) => {
             let newMatches = contentScript[0].matches.concat(trimURL);
-            chrome.scripting.updateContentScripts([{ id: id, matches: newMatches }]);
+            chrome.scripting.updateContentScripts([{ id: id, matches: newMatches, persistAcrossSessions: true }]);
             console.log(`Added ${trimURL} to registered content script.`)
         });
 }
