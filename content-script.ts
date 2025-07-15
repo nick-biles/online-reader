@@ -20,10 +20,6 @@ chrome.runtime.onMessage.addListener(function recieveMessage(request, sender, se
         case "isReaderContentScriptHere?":
             sendResponse("Online Reader content-script is present.");
             return;
-        case "trchecktoolbar": // TODO, maybe implement toolbar below bookmark bar
-            console.log("content-script: Loading Online Reader Toolbar! (TODO)");
-            sendResponse(false);
-            return false;
         default:
             sendResponse("Unimplemented case: " + request.request);
     }
@@ -63,15 +59,6 @@ function startScrolling(request: {speed: number, persist: boolean}) {
     console.log("content-script: Started Scrolling" + ` | ${distance}px every ${time}ms`);
 
     return true;
-}
-
-// Planned functions
-function nextPage(request: any) {
-    console.log("content-script: Next (TODO)");
-    return false;
-}
-function backPage(request: any) {
-    console.log("content-script: Back (TODO)");
 }
 
 
