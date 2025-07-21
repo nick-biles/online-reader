@@ -2,14 +2,11 @@
  * Several default colors to be used in the style sheet.
  * I prefer red base color, so colors are tinted slightly.
 >* * * * * * * * * * * * * * * * * * * * * * * * */
-.ornbcreatorcolors{
-    --ornb-bright-white: rgb(180, 160, 160);
-    --ornb-light-white: rgb(160, 140, 140);
-    --ornb-dark: rgb(55, 45, 45);
-}
-
 * {
     --ornb-toolbar-shadow-dimensions: 0px 2px 10px;
+    --ornb-bright-white: rgb(205, 200, 195);
+    --ornb-light-white: rgb(160, 140, 140);
+    --ornb-dark: rgb(55, 45, 45);
 }
 
 .colormodedark{
@@ -19,11 +16,15 @@
     --ornb-shadow_color: rgba(0, 0, 0, 0.4);
 }
 .colormodelight{
-    --ornb-primary-font-color:--ornb-dark;
-    --ornb-primary-background-color:-ornb-bright-white;
-    --ornb-primary-border-color: --ornb-light-white;
+    --ornb-primary-font-color:var(--ornb-dark);
+    --ornb-primary-background-color:var(--ornb-bright-white);
+    --ornb-primary-border-color: var(--ornb-light-white);
     --ornb-shadow_color: rgba(160, 140, 140, 0.4);
 }
+
+/* * * * * * * * * * * * * * * * * * * * * * * * *
+ * Toolbar class not used currently
+>* * * * * * * * * * * * * * * * * * * * * * * * */
 .toolbar{
     height: 25px;
     border: none;
@@ -37,5 +38,28 @@
     box-sizing: border-box;
     box-shadow: var(--ornb-toolbar-shadow-dimensions), var(--ornb-shadow_color);
 }
+#menubar{
+    background-color: var(--ornb-primary-background-color);
+    color: var(--ornb-primary-font-color);
+    border-color: var(--ornb-primary-border-color);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    line-height: 25px;
+}
 
-hr{margin:0;border:0px;height:1px;background:var(--ornb-primary-border-color)}
+button {
+    background-color: var(--ornb-primary-background-color);
+    color: var(--ornb-primary-font-color);
+    border-color: var(--ornb-primary-border-color);
+    width: 80px;
+    margin: 2px;
+}
+
+input {
+    background-color: var(--ornb-primary-background-color);
+    color: var(--ornb-primary-font-color);
+    border-color: var(--ornb-primary-border-color);
+    width: 72px;
+    margin-left: 11px;
+}
