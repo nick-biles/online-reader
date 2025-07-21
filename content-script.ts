@@ -31,6 +31,13 @@ var scrollIntervalID = null as (number | null);
 var scrollSpeed = 0;
 
 function startScrolling(request: {speed: number, persist: boolean}) {
+    
+    // If opted in, save requested speed and current tabId in storage.
+    if(request.persist) {
+        chrome.storage.session.set({autoScrollTab: myTabId});
+        chrome.storage.session.set({lastSpeed: request.speed});
+    }
+
     // If speed requested is equivalent to current speed, exit.
     if (scrollSpeed == request.speed) { return true; }
 
@@ -41,12 +48,6 @@ function startScrolling(request: {speed: number, persist: boolean}) {
     }
 
     scrollSpeed = request.speed;
-
-    // If opted in, save requested speed and current tabId in storage.
-    if(request.persist) {
-        chrome.storage.session.set({ autoScrollTab: myTabId});
-        chrome.storage.session.set({lastSpeed: request.speed});
-    }
     
     // If requested speed is 0, exit before instantiating scroller.
     if (request.speed == 0) { return true; }

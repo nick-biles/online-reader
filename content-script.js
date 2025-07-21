@@ -19,10 +19,6 @@ chrome.runtime.onMessage.addListener(function recieveMessage(request, sender, se
         case "isReaderContentScriptHere?":
             sendResponse("Online Reader content-script is present.");
             return;
-        case "trchecktoolbar": // TODO, maybe implement toolbar below bookmark bar
-            console.log("content-script: Loading Online Reader Toolbar! (TODO)");
-            sendResponse(false);
-            return false;
         default:
             sendResponse("Unimplemented case: " + request.request);
     }
@@ -32,6 +28,11 @@ chrome.runtime.onMessage.addListener(function recieveMessage(request, sender, se
 var scrollIntervalID = null;
 var scrollSpeed = 0;
 function startScrolling(request) {
+    // If opted in, save requested speed and current tabId in storage.
+    if (request.persist) {
+        chrome.storage.session.set({ autoScrollTab: myTabId });
+        chrome.storage.session.set({ lastSpeed: request.speed });
+    }
     // If speed requested is equivalent to current speed, exit.
     if (scrollSpeed == request.speed) {
         return true;
@@ -42,11 +43,6 @@ function startScrolling(request) {
         scrollIntervalID = null;
     }
     scrollSpeed = request.speed;
-    // If opted in, save requested speed and current tabId in storage.
-    if (request.persist) {
-        chrome.storage.session.set({ autoScrollTab: myTabId });
-        chrome.storage.session.set({ lastSpeed: request.speed });
-    }
     // If requested speed is 0, exit before instantiating scroller.
     if (request.speed == 0) {
         return true;
@@ -58,14 +54,6 @@ function startScrolling(request) {
     scrollIntervalID = setInterval(function scroll(distance) { window.scrollBy(0, distance); }, time, distance);
     console.log("content-script: Started Scrolling" + ` | ${distance}px every ${time}ms`);
     return true;
-}
-// Planned functions
-function nextPage(request) {
-    console.log("content-script: Next (TODO)");
-    return false;
-}
-function backPage(request) {
-    console.log("content-script: Back (TODO)");
 }
 //Finished loading content script
 chrome.runtime.sendMessage({ for: "background", request: "returnMyTabId" })
