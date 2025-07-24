@@ -1,6 +1,6 @@
 # Online Reader
 
-This chrome extension provides accessibility features for reading online.  Currently it's not much, but I am reworking it to improve performance and security.
+This chrome extension provides accessibility features for reading online.
 
 ---
 ## Current Version:
@@ -21,7 +21,7 @@ The current version implements autoscroll and remembered scroll, allowing the us
 ---
 ## Roadmap:
 
-Rework Autoscroll Functionality  
-Rework UI  
-Implement Keyboard Shortcuts  
-Downloading
+- [x] Rework Autoscroll Functionality
+- [ ] Rework UI  
+- [ ] Implement Keyboard Shortcuts  
+- [ ] Downloading
