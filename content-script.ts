@@ -1,8 +1,9 @@
-"use strict";
 console.log("content-script: I am running!");
+
 var debug = false;
 var storageKey = "orContentScript";
 var myTabId = -1;
+
 chrome.runtime.onMessage.addListener(function recieveMessage(request, sender, sendResponse) {
     console.log("content-script: Received Message");
     if (debug) {
@@ -23,48 +24,58 @@ chrome.runtime.onMessage.addListener(function recieveMessage(request, sender, se
             sendResponse("Unimplemented case: " + request.request);
     }
 });
+
 // Functions and variables part of reader tool.
 // Navigate Section
-var scrollIntervalID = null;
+var scrollIntervalID = null as (number | null);
 var scrollSpeed = 0;
-function startScrolling(request) {
+
+function startScrolling(request: {speed: number, persist: boolean}) {
+    
     // If opted in, save requested speed and current tabId in storage.
-    if (request.persist) {
-        chrome.storage.session.set({ autoScrollTab: myTabId });
-        chrome.storage.session.set({ lastSpeed: request.speed });
+    if(request.persist) {
+        chrome.storage.session.set({autoScrollTab: myTabId});
+        chrome.storage.session.set({lastSpeed: request.speed});
     }
+
     // If speed requested is equivalent to current speed, exit.
-    if (scrollSpeed == request.speed) {
-        return true;
-    }
+    if (scrollSpeed == request.speed) { return true; }
+
     // If already scrolling, stop autoscroller in order to replace it. 
     if (scrollIntervalID) {
         clearInterval(scrollIntervalID);
         scrollIntervalID = null;
     }
+
     scrollSpeed = request.speed;
+    
     // If requested speed is 0, exit before instantiating scroller.
-    if (request.speed == 0) {
-        return true;
-    }
+    if (request.speed == 0) { return true; }
+
     // Calculate scroll parameters from speed variable.
-    let time = 400 / request.speed;
+    let time = 400/request.speed;
     let distance = 1;
     // Start scrolling with setInterval.  Scrolls [distance] pixels downwards every [time] milliseconds.
-    scrollIntervalID = setInterval(function scroll(distance) { window.scrollBy(0, distance); }, time, distance);
+    scrollIntervalID = setInterval(function scroll(distance: number) { window.scrollBy(0, distance); }, time, distance);
     console.log("content-script: Started Scrolling" + ` | ${distance}px every ${time}ms`);
+
     return true;
 }
+
+
 //Finished loading content script
-chrome.runtime.sendMessage({ for: "background", request: "returnMyTabId" })
-    .then((response) => {
+chrome.runtime.sendMessage({for: "background", request: "returnMyTabId"})
+.then((response) => {
     myTabId = response.tabId;
+    
     onFullyLoaded();
-}, (errorMessage) => console.log("Error: content-script did not receive myTabId.  " + errorMessage));
+},
+(errorMessage) => console.log("Error: content-script did not receive myTabId.  " + errorMessage));
+
 async function onFullyLoaded() {
     let autoScrollingTabId = await chrome.storage.session.get("autoScrollTab");
     if (myTabId != autoScrollingTabId["autoScrollTab"])
         return;
     let persistedScrollSpeed = await chrome.storage.session.get("lastSpeed");
-    startScrolling({ speed: persistedScrollSpeed.lastSpeed, persist: false });
+    startScrolling({speed: persistedScrollSpeed.lastSpeed, persist: false});
 }
