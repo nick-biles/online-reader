@@ -43,6 +43,24 @@ chrome.runtime.onMessage.addListener(function handleMessage(request, sender, sen
             console.log("Failed to handle message, request: " + text);
     }
 });
+chrome.commands.onCommand.addListener(function shortcut(theCommand, myTab) {
+    switch (theCommand) {
+        case "startScrolling":
+            chrome.storage.session.get("lastSpeed")
+                .then((data) => {
+                if (data.lastSpeed) {
+                    console.log("Retrieved stored speed: " + data.lastSpeed);
+                    handleScrollAction(data.lastSpeed, myTab, false);
+                }
+            });
+            break;
+        case "stopScrolling":
+            handleScrollAction(0, myTab, false);
+            break;
+        default:
+            console.log("Unimplemented keyboard shortcut: " + theCommand);
+    }
+});
 // Injects the content script into the given tab if it is not already injected.
 function doInject(indent, tabId, tab, changeInfo) {
     chrome.tabs.sendMessage(tabId, { request: "isReaderContentScriptHere?" })
@@ -129,5 +147,16 @@ function addPageToRegisteredScripts(URL, id) {
         let newMatches = oldMatches.concat(trimURL);
         chrome.scripting.updateContentScripts([{ id: id, matches: newMatches, persistAcrossSessions: true }]);
         console.log(`Added ${trimURL} to registered content script.`);
+    });
+}
+function handleScrollAction(speed, myTab, persist) {
+    if (myTab.id == undefined) {
+        return -1;
+    }
+    chrome.tabs.sendMessage(myTab.id, { request: "startScrolling", speed: speed, persist: persist })
+        .then(() => { }, (err) => {
+        // Currently we assume there is no content script.
+        chrome.runtime.sendMessage({ for: "background", request: "injectActiveTab", to: myTab });
+        setTimeout(chrome.tabs.sendMessage, 1000, myTab.id, { request: "startScrolling", speed: speed, persist: persist });
     });
 }

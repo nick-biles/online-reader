@@ -20,7 +20,7 @@ function addHandler(action, elementID, func, hasSpeed, persist) {
                 .then(() => { }, (err) => {
                 // Currently we assume there is no content script.
                 chrome.runtime.sendMessage({ for: "background", request: "injectActiveTab", to: activeTab });
-                setTimeout(chrome.tabs.sendMessage, 1000, activeTab.id, { request: func, speed: speed });
+                setTimeout(chrome.tabs.sendMessage, 1000, activeTab.id, { request: func, speed: speed, persist: persist });
             });
         });
     });
@@ -28,7 +28,7 @@ function addHandler(action, elementID, func, hasSpeed, persist) {
 // Define what events are associated with each button
 addHandler("click", "scrollbutton", "startScrolling", speedElement, false);
 addHandler("click", "autoscrollbutton", "startScrolling", speedElement, true);
-addHandler("click", "stopscrollbutton", "startScrolling", { value: 0 }, true);
+addHandler("click", "stopscrollbutton", "startScrolling", { value: 0 }, false);
 // Retrieve the last stored speed for convenience.
 chrome.storage.session.get("lastSpeed")
     .then((data) => {
