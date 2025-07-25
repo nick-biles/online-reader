@@ -54,6 +54,9 @@ chrome.commands.onCommand.addListener(function shortcut(theCommand, myTab) {
                 if (data.lastSpeed) {
                     console.log("Retrieved stored speed: " + data.lastSpeed);
                     handleScrollAction(data.lastSpeed, myTab, false);
+                } else {
+                    console.log("No stored speed, proceeding with speed 14.");
+                    handleScrollAction(14, myTab, false);
                 }
             });
             break;
@@ -169,10 +172,7 @@ function handleScrollAction(speed: number, myTab: chrome.tabs.Tab, persist: bool
         return -1;
     }
 
-    chrome.tabs.sendMessage(myTab.id, { request: "startScrolling", speed: speed, persist: persist})
-    .then(() => {}, (err) => {
-        // Currently we assume there is no content script.
-        chrome.runtime.sendMessage({ for: "background", request: "injectActiveTab", to: myTab});
-        setTimeout(chrome.tabs.sendMessage, 1000, myTab.id, { request: "startScrolling", speed: speed, persist: persist});
-    });
+    doInject("  ", myTab.id, myTab, null);
+    setTimeout(chrome.tabs.sendMessage, 1000, myTab.id, { request: "startScrolling", speed: speed, persist: persist});
+    
 }
