@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "Online Reader",
     "short_name": "Online Reader",
-    "version": "0.3.1",
+    "version": "0.3.2",
     "description": "The online reader extension is designed to provide accessibility functions for reading books on the web.  It currently includes autoscrolling functionality.",
     "icons": {
         "48": "images/icon-48.png",
@@ -19,14 +19,14 @@
         "startScrolling": {
             "description": "Start scrolling at the current saved speed."
         },
+        "startAutoScrolling": {
+            "description": "Start persistent scrolling at the current saved speed.  It will continue to scroll upon page refresh or change as long as it remains on a registered site."
+        },
         "stopScrolling": {
             "description": "Stop scrolling."
         },
-        "nextPage": {
-            "description": "Navigate to the page's 'next page' using webpage buttons. (TODO)"
-        },
-        "backPage": {
-            "description": "Navigate to the page's 'previous page' using webpage buttons. (TODO)"
+        "registerSite": {
+            "description": "Registers the current site with the reader extension."
         },
         "downloadPageContent": {
             "description": "Download the contents of the page. (TODO)"

@@ -61,6 +61,25 @@ chrome.commands.onCommand.addListener(function shortcut(theCommand, myTab) {
         case "stopScrolling":
             handleScrollAction(0, myTab, false);
             break;
+        case "startAutoScrolling":
+            chrome.storage.session.get("lastSpeed")
+                .then((data) => {
+                if (data.lastSpeed) {
+                    console.log("Retrieved stored speed: " + data.lastSpeed);
+                    handleScrollAction(data.lastSpeed, myTab, true);
+                }
+                else {
+                    console.log("No stored speed, proceeding with speed 14.");
+                    handleScrollAction(14, myTab, true);
+                }
+            });
+            break;
+        case "registerSite":
+            if (myTab.url)
+                addPageToRegisteredScripts(myTab.url, "reader-content-script");
+            else
+                console.log("Failed to register site with reader, no url found.");
+            break;
         default:
             console.log("Unimplemented keyboard shortcut: " + theCommand);
     }
