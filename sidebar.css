@@ -1,0 +1,63 @@
+* {
+    --ornb-white: #FFFFFF;
+    --ornb-black: #000000;
+    --ornb-primary-background-color: #513430;
+    --ornb-secondary-background-color: #381f1b;
+    --ornb-shadow_color: rgba(0, 0, 0, 0.4);
+}
+
+#sidebar {
+    background-color: var(--ornb-secondary-background-color);
+    color: var(--ornb-white);
+    margin: 10px;
+}
+
+h1 {
+    font-size: large;
+    text-align: center;
+}
+
+.functionblock {
+    width: 100%;
+    background-color: var(--ornb-primary-background-color);
+    border-radius: 20px;
+}
+
+#scrollspeeddiv {
+    width: calc(100% - 20px);
+    margin: 10px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+#scrollspeedlabel {
+    width: 40%;
+}
+
+#scrollspeed {
+    width: calc(100% - 100px);
+    position: absolute;
+    right: 0;
+}
+
+button {
+    width: auto;
+    border: none;
+    background-color: var(--ornb-secondary-background-color);
+    color: var(--ornb-white);
+    border-radius: 20px;
+}
+
+.halfbutton {
+    width: calc(50% - 22px);
+    height: 100px;
+    margin: 10px;
+    margin-top: 0px;
+}
+
+.fullbutton {
+    width: calc(100% - 20px);
+    height: 100px;
+    margin: 10px;
+    margin-top: 0px;
+}

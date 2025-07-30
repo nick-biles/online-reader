@@ -6,6 +6,8 @@ chrome.runtime.onInstalled.addListener(function installed() {
     addContextMenus();
     // Registers a default website with the reader content script.
     registerContentScripts();
+    // Sets the default sidepanel to open to be v.
+    chrome.sidePanel.setOptions({ path: "sidebar.html" });
     // Allows content scripts to access the extension's session storage.
     chrome.storage.session.setAccessLevel({ accessLevel: "TRUSTED_AND_UNTRUSTED_CONTEXTS" });
 });
@@ -132,6 +134,18 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
                 console.log("Failure registering script, no tab info.");
             }
             break;
+        case "actionMenuOpenSidebar":
+            if (!tab) {
+                console.log("Tried to open reader sidebar with undefined tab.");
+                break;
+            }
+            if (tab.id) {
+                chrome.sidePanel.open({ tabId: tab.id });
+            }
+            else {
+                chrome.sidePanel.open({ windowId: tab.windowId });
+            }
+            break;
         // case "":
         //     break;
         default:
@@ -142,6 +156,11 @@ function addContextMenus() {
     chrome.contextMenus.create({
         id: "actionMenuAddDynamicPage",
         title: "Register Site with Reader",
+        contexts: ["action"]
+    });
+    chrome.contextMenus.create({
+        id: "actionMenuOpenSidebar",
+        title: "Open Online Reader Sidebar",
         contexts: ["action"]
     });
 }
